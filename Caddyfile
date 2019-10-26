@@ -1,0 +1,7 @@
+YOUR.DOMAIN.NAME {
+  proxy /shadow 127.0.0.1:10001 {
+    websocket
+    header_upstream -Origin
+  }
+}
+
