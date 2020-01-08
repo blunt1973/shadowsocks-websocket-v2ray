@@ -3,5 +3,18 @@ YOUR.DOMAIN.NAME {
     websocket
     header_upstream -Origin
   }
+
+  proxy /ray 127.0.0.1:10000 {
+    websocket
+    header_upstream -Origin
+  }
+
+  log /var/log/caddy/access.log {
+    rotate_size 5  # Rotate after 50 MB
+    rotate_age  30  # Keep rotated files for 90 days
+    rotate_keep 3  # Keep at most 20 log files
+    rotate_compress # Compress rotated log files in gzip format
+  }
+
 }
 
