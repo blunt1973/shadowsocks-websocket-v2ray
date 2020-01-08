@@ -36,22 +36,22 @@
       }
     },
     {
-		"port": 10000,
-		"listen": "127.0.0.1",
-		"protocol": "vmess",
-		"tag": "proxy",
-		"settings": {
-			"clients": [{
-				"id": "YOUR_V2RAY_ID", /* your v2ray ID */
-				"alterId": 64
-			}]
-		},
-		"streamSettings": {
-			"network": "ws",
-			"wsSettings": {
-				"path": "/ray"
-			}
-		}
+      "port": 10000,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "tag": "proxy",
+      "settings": {
+          "clients": [{
+              "id": "YOUR_V2RAY_ID", /* your v2ray ID */
+              "alterId": 64
+          }]
+      },
+      "streamSettings": {
+          "network": "ws",
+          "wsSettings": {
+              "path": "/ray"
+          }
+      }
 	}
   ],
   "outbounds": [

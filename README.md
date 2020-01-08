@@ -15,7 +15,7 @@ The client is Shadowsocks, server is V2ray behind Caddy, Caddy plays a reverse p
     
     `curl -Ls https://install.direct/go.sh | sudo bash`
     
-    Replace  **YOUR_PASSWORD**  and  **YOUR_V2RAY_ID**  in  `v2ray-config.json`, then copy it to  `/etc/v2ray/config.json`
+    Replace  **YOUR_PASSWORD**  and  **YOUR_V2RAY_ID**  in  `v2ray-server-config.json`, then copy it to  `/etc/v2ray/config.json`
     
     Start v2ray service
     
