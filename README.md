@@ -5,38 +5,44 @@ The client is Shadowsocks, server is V2ray behind Caddy, Caddy plays a reverse p
 ### PREREQUISITES
 
 -   Ubuntu 18.04
--   V2Ray v4.20.0
--   Caddy v1.0.3
+-   V2Ray v4.39.2
+-   Caddy v2.4.1
 -   ShadowsocksX-NG v1.9.2
 
 ### QUICKSTART
 
 -   Install V2ray
     
-    `curl -Ls https://install.direct/go.sh | sudo bash`
+    `bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)`
     
     Replace  **YOUR_PASSWORD**  and  **YOUR_V2RAY_ID**  in  `v2ray-server-config.json`, then copy it to  `/etc/v2ray/config.json`
+
+
+    remember to modify the systemd service file @ /etc/systemd/system/v2ray.service 
+    Add the following line to the block starting with [Service]
+
+    LimitNOFILE=1048576
+    RuntimeDirectory=ss-loop 
+
     
     Start v2ray service
     
-    `systemctl start v2ray`
-    
--   Install Caddy
-    
-    > Please DON'T use Caddy 2.0+, the configuration format is completely different.
-    
-    `curl https://getcaddy.com | bash -s personal hook.service`
-    
+    `
+    systemctl daemon-reload
+    systemctl enable v2ray.service
+    systemctl start v2ray.service
+    `
+
+-   Install Caddy 2
+
+    `
+    sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo apt-key add -
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+    sudo apt update
+    sudo apt install caddy
+    `
     Replace  **YOUR.DOMAIN.NAME**  in  `Caddyfile`, then copy it to  `/etc/Caddyfile`
-    
-    Setup Caddy as a service
-    
-    `caddy -service install -conf /etc/Caddyfile`
-    
-    Start Caddy service
-    
-    `caddy -service start`
-    
 -   Setup Shadowsocks
     
     The config file is  `shadowsocks-client-config.json`, before filling this information into the client's configuration file please replace  **YOUR.DOMAIN.NAME**  and  **YOUR_PASSWORD**.

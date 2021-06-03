@@ -1,20 +1,19 @@
 YOUR.DOMAIN.NAME {
-  proxy /shadow 127.0.0.1:10001 {
-    websocket
-    header_upstream -Origin
+  reverse_proxy /shadow 127.0.0.1:10001 {
+    transport http {
+        versions h2c
+    }
   }
-
-  proxy /ray 127.0.0.1:10000 {
-    websocket
-    header_upstream -Origin
+  reverse_proxy /ray 127.0.0.1:10000 {
+    transport http {
+        versions h2c
+    }
   }
+  respond /health-check 200
 
-  log /var/log/caddy/access.log {
-    rotate_size 5  # Rotate after 50 MB
-    rotate_age  30  # Keep rotated files for 90 days
-    rotate_keep 3  # Keep at most 20 log files
-    rotate_compress # Compress rotated log files in gzip format
+  log {
+    output file /var/log/caddy/access.log {
+      rotate_size 10MiB
+    }
   }
-
 }
-

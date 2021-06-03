@@ -4,32 +4,54 @@
     "access": "/var/log/v2ray/access.log",
     "error": "/var/log/v2ray/error.log"
   },
-  "inbounds": [
-    {
-      "port": 1080,
-      "protocol": "socks",
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "domainMatcher": "mph",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "domain": [
+          "icanhazip.com",
+          "geosite:cn"
         ]
       },
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "ip": [
+          "geoip:private",
+          "geoip:cn"
+        ]
+      },
+      {
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "proxy"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "port": 1086,
+      "listen": "0.0.0.0",
+      "protocol": "socks",
       "settings": {
         "auth": "noauth",
-        "udp": false
+        "udp": true,
+        "ip": "0.0.0.0"
       }
     },
     {
-      "port": 1081,
-      "protocol": "http",
-      "settings": {}
+      "port": 1087,
+      "listen": "0.0.0.0",
+      "protocol": "http"
     }
   ],
   "outbounds": [
     {
       "protocol": "vmess",
-      "tag": "v2ray",
+      "tag": "proxy",
       "settings": {
         "vnext": [
           {
@@ -38,7 +60,8 @@
             "users": [
               {
                 "id": "YOUR_V2RAY_ID",
-                "alterId": 64
+                "alterId": 64,
+                "security": "auto"
               }
             ]
           }
@@ -54,40 +77,7 @@
     },
     {
       "protocol": "freedom",
-      "settings": {},
       "tag": "direct"
     }
-  ],
-  "routing": {
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "type": "field",
-        "outboundTag": "direct",
-        "domain": [
-          "icanhazip.com"
-        ]
-      },
-      {
-        "type": "field",
-        "outboundTag": "direct",
-        "domain": [
-          "geosite:cn"
-        ]
-      },
-      {
-        "type": "field",
-        "outboundTag": "direct",
-        "ip": [
-          "geoip:private",
-          "geoip:cn"
-        ]
-      },
-      {
-        "type": "field",
-        "network": "tcp,udp",
-        "outboundTag": "v2ray"
-      }
-    ]
-  }
+  ]
 }

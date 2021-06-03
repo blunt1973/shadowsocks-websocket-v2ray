@@ -4,31 +4,55 @@
     "error": "/var/log/v2ray/error.log",
     "loglevel": "info"
   },
+  "routing": {
+    "domainMatcher": "mph",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": "wsdoko",
+        "outboundTag": "ssmux"
+      },
+      {
+        "type": "field",
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "reject"
+      }
+    ]
+  },
   "inbounds": [
     {
-      "port": "10001",        /* this is the server port for client */
       "listen": "127.0.0.1",
+      "port": 10001,
       "protocol": "dokodemo-door",
       "tag": "wsdoko",
       "settings": {
-        "address": "v1.mux.cool",   /* don't change!!! */
+        "address": "v1.mux.cool",
         "followRedirect": false,
-        "network": "tcp"
+        "network": "tcp, udp"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
       },
       "streamSettings": {
-        "network": "ws",      /* same as v2ray-plugin */
+        "network": "ws",
         "wsSettings": {
-          "path": "/shadow"  /* same as Caddy conf and shadowsocks v2ray-plugin conf */
+          "path": "/shadow"
         }
       }
     },
     {
-      "port": 9015,   /* this port is not used, but you need to specific */
+      "port": 9015,
       "protocol": "shadowsocks",
       "settings": {
-        "method": "aes-256-gcm",  /* shadowsocks encrypt method */
+        "method": "chacha20-ietf-poly1305",
         "ota": false,
-        "password": "YOUR_PASSWORD", /* shadowsocks client password */
+        "password": "YOUR_PASSWORD" /* shadowsocks client password */,
         "network": "tcp,udp"
       },
       "streamSettings": {
@@ -39,31 +63,26 @@
       "port": 10000,
       "listen": "127.0.0.1",
       "protocol": "vmess",
-      "tag": "proxy",
       "settings": {
-          "clients": [{
-              "id": "YOUR_V2RAY_ID", /* your v2ray ID */
-              "alterId": 64
-          }]
+        "clients": [
+          {
+            "id": "YOUR_V2RAY_ID", /* v2ray client id */
+            "alterId": 64
+          }
+        ]
       },
       "streamSettings": {
-          "network": "ws",
-          "wsSettings": {
-              "path": "/ray"
-          }
+        "network": "ws",
+        "wsSettings": {
+          "path": "/ray"
+        }
       }
-	}
+    }
   ],
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {},
       "tag": "direct"
-    },
-    {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
     },
     {
       "protocol": "freedom",
@@ -71,29 +90,15 @@
       "streamSettings": {
         "network": "domainsocket"
       }
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "reject"
     }
   ],
   "transport": {
     "dsSettings": {
-      "path": "/var/run/ss-loop.sock"  /* the directory must exist before v2ray starts */
+      "path": "/var/run/ss-loop/ss-loop.sock"
     }
-  },
-  "routing": {
-    "rules": [
-      {
-        "type": "field",
-        "inboundTag": [
-          "wsdoko"
-        ],
-        "outboundTag": "ssmux"
-      },
-      {
-        "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked"
-      }
-    ]
   }
 }
