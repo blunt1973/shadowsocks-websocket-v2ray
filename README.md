@@ -13,7 +13,9 @@ The client is Shadowsocks, server is V2ray behind Caddy, Caddy plays a reverse p
 
 -   Install V2ray
     
-    `bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)`
+    ```shell
+    bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+    ```
     
     Replace  **YOUR_PASSWORD**  and  **YOUR_V2RAY_ID**  in  `v2ray-server-config.json`, then copy it to  `/etc/v2ray/config.json`
 
@@ -21,28 +23,33 @@ The client is Shadowsocks, server is V2ray behind Caddy, Caddy plays a reverse p
     remember to modify the systemd service file @ /etc/systemd/system/v2ray.service 
     Add the following line to the block starting with [Service]
 
+    
+    ```console
     LimitNOFILE=1048576
-    RuntimeDirectory=ss-loop 
-
+    RuntimeDirectory=ss-loop
+    ```
     
     Start v2ray service
     
-    `
+    ```shell
     systemctl daemon-reload
     systemctl enable v2ray.service
     systemctl start v2ray.service
-    `
+    ```
 
 -   Install Caddy 2
 
-    `
+    ```shell
     sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo apt-key add -
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
     sudo apt update
     sudo apt install caddy
-    `
+    ```
+    
+    
     Replace  **YOUR.DOMAIN.NAME**  in  `Caddyfile`, then copy it to  `/etc/Caddyfile`
+    
 -   Setup Shadowsocks
     
     The config file is  `shadowsocks-client-config.json`, before filling this information into the client's configuration file please replace  **YOUR.DOMAIN.NAME**  and  **YOUR_PASSWORD**.
